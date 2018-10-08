@@ -6,18 +6,18 @@ using Interview;
 
 namespace TechTestImpl
 {
-    public class ProductionRepository : IRepository<ProductionReadyCode> 
+    public class ProductionRepository<T> : IRepository<T> where T:IStoreable
     {
-        private readonly IMetaDataContext _metaDataContext;
+        private readonly IMetaDataContext<T> _metaDataContext;
 
-        public ProductionRepository(IMetaDataContext metaDataContext)
+        public ProductionRepository(IMetaDataContext<T> metaDataContext)
         {
             _metaDataContext = metaDataContext;
           
         }
-        public IEnumerable<ProductionReadyCode> All()
+        public IEnumerable<T> All()
         {
-            return _metaDataContext.ProductionReadyCodes;
+            return (IEnumerable<T>) _metaDataContext.ProductionReadyCodes;
         }
 
         public void Delete(IComparable id)
@@ -25,15 +25,19 @@ namespace TechTestImpl
             _metaDataContext.ProductionReadyCodes.Remove(_metaDataContext.ProductionReadyCodes.FirstOrDefault(x=>Equals(x.Id, id)));
         }
 
-        public void Save(ProductionReadyCode item)
+        public void Save(T item)
         {
-            _metaDataContext.ProductionReadyCodes.Add(item);
+           _metaDataContext.ProductionReadyCodes.Add(item);
             
         }
 
-        public ProductionReadyCode FindById(IComparable id)
+        public T FindById(IComparable id)
         {
-            return All().FirstOrDefault(x => x.Id.Equals(id));
+            return _metaDataContext.ProductionReadyCodes.First(CheckToCompare(id));
+        }
+        private static Func<T, bool> CheckToCompare(IComparable id)
+        {
+            return i => i.Id.Equals(id);
         }
     }
 }

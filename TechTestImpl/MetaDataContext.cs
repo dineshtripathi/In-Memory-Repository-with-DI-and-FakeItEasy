@@ -3,8 +3,8 @@ using Dto;
 
 namespace TechTestImpl
 {
-    public class MetaDataContext : IMetaDataContext
+    public class MetaDataContext<T> : IMetaDataContext<T> where T:class 
     {
-        public IList<ProductionReadyCode> ProductionReadyCodes { get; set; }
+        public IList<T> ProductionReadyCodes { get; set; }
     }
 }

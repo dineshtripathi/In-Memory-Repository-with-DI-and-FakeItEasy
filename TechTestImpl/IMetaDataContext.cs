@@ -3,8 +3,8 @@ using Dto;
 
 namespace TechTestImpl
 {
-    public interface IMetaDataContext
+    public interface IMetaDataContext<T>
     {
-        IList<ProductionReadyCode> ProductionReadyCodes { get; set; }
+        IList<T> ProductionReadyCodes { get; set; }
     }
 }

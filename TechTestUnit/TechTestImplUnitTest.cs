@@ -23,14 +23,14 @@ namespace TechTestUnit
         [MemberData(nameof(GetAllProductionCodes))]
         public void Get_All_Production_ReadyCode_From_RepositoryTest(List<ProductionReadyCode> allCodes)
         {
-            var fakeDbContext = A.Fake<IMetaDataContext>(ops=>ops.Strict());
-            var fakeRepository = A.Fake<IRepository<ProductionReadyCode>>(ops=>ops.Strict());
+            var fakeDbContext = A.Fake<IMetaDataContext<ProductionReadyCode>>(ops=>ops.Strict());
+            var fakeRepository = A.Fake<IRepository<ProductionReadyCode>>();
             //Setup
             A.CallTo(() => fakeDbContext.ProductionReadyCodes).Returns(allCodes);
-            A.CallTo(() => fakeRepository.All()).Returns(allCodes);
-
+            var prodRepository = new ProductionRepository<ProductionReadyCode>(fakeDbContext);
             //Act
-            var results = fakeRepository.All();
+            var results = prodRepository.All();
+            A.CallTo(() => fakeDbContext.ProductionReadyCodes).MustHaveHappened();
 
             //Assert
             results.Should().BeEquivalentTo(allCodes);
@@ -40,10 +40,10 @@ namespace TechTestUnit
         [MemberData(nameof(GetProductionCodesAfterDeletingById_4))]
         public void Delete_Specified_ProductionReadyCode_ById_From_Test(List<ProductionReadyCode> allCodes,List<ProductionReadyCode> codesAfterDeletion,int idForDeletion)
         {
-            var fakeDbContext = A.Fake<IMetaDataContext>(ops => ops.Strict());
+            var fakeDbContext = A.Fake<IMetaDataContext<ProductionReadyCode>>(ops => ops.Strict());
             //Setup
 
-            var prodRepository =new ProductionRepository(fakeDbContext);
+            var prodRepository =new ProductionRepository<ProductionReadyCode>(fakeDbContext);
             A.CallTo(() => fakeDbContext.ProductionReadyCodes).Returns(allCodes);
             
             //Act
@@ -59,10 +59,10 @@ namespace TechTestUnit
         [MemberData(nameof(SaveProductionCodesNewDataSet))]
         public void Save_ProductionReadyCode_To_Repository_Test(List<ProductionReadyCode> allCodes,ProductionReadyCode saveData)
         {
-            var fakeDbContext = A.Fake<IMetaDataContext>(ops => ops.Strict());
+            var fakeDbContext = A.Fake<IMetaDataContext<ProductionReadyCode>>(ops => ops.Strict());
             //Setup
 
-            var prodRepository = new ProductionRepository(fakeDbContext);
+            var prodRepository = new ProductionRepository<ProductionReadyCode>(fakeDbContext);
             A.CallTo(() => fakeDbContext.ProductionReadyCodes).Returns(allCodes);
 
             //Act
@@ -79,10 +79,10 @@ namespace TechTestUnit
         [MemberData(nameof(FindByIdInProductionCode))]
         public void Find_ProductionReadyCode_From_Repository_ById_Test(List<ProductionReadyCode> allCodes,ProductionReadyCode searchedResult,int id)
         {
-            var fakeDbContext = A.Fake<IMetaDataContext>(ops => ops.Strict());
+            var fakeDbContext = A.Fake<IMetaDataContext<ProductionReadyCode>>(ops => ops.Strict());
             //Setup
 
-            var prodRepository = new ProductionRepository(fakeDbContext);
+            var prodRepository = new ProductionRepository<ProductionReadyCode>(fakeDbContext);
             A.CallTo(() => fakeDbContext.ProductionReadyCodes).Returns(allCodes);
 
             //Act
